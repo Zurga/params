@@ -54,6 +54,7 @@ defmodule Params.Mixfile do
   defp deps do
     [
       {:ecto, "~> 2.0 or ~> 3.0"},
+      {:typed_ecto_schema, "~> 0.4.1"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:dialyxir, "~> 0.5", only: :dev, runtime: false}
     ]

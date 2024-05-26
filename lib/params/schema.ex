@@ -57,7 +57,7 @@ defmodule Params.Schema do
 
   defp __use__(:ecto) do
     quote do
-      use Ecto.Schema
+      use TypedEctoSchema
       import Ecto.Changeset
       @primary_key {:_id, :binary_id, autogenerate: false}
     end

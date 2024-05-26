@@ -87,8 +87,8 @@ defmodule Params.Def do
       @required unquote(field_names(schema, &is_required?/1))
       @optional unquote(field_names(schema, &is_optional?/1))
 
-      schema do
-        unquote_splicing(schema_fields(schema))
+      typed_embedded_schema do
+        (unquote_splicing(schema_fields(schema)))
       end
     end
   end
