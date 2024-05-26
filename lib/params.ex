@@ -140,6 +140,8 @@ defmodule Params do
     {optional, optional_relations} =
       relation_partition(module, optional(module))
 
+    params = convert(params)
+
     changeset
     |> Changeset.cast(params, required ++ optional)
     |> Changeset.validate_required(required)
@@ -156,6 +158,20 @@ defmodule Params do
   def changeset(module, params) when is_atom(module) do
     changeset(module |> change, params)
   end
+
+  defp convert(params) when is_struct(params) do
+    params |> Map.from_struct |> convert()
+  end
+
+  defp convert(params) when is_map(params) do
+    Map.new(params, fn {k, v} -> {k, convert(v)} end)
+  end
+
+  defp convert(params) when is_list(params) do
+    Enum.map(params, &convert/1)
+  end
+
+  defp convert(params), do: params
 
   defp change(%{__struct__: _} = model) do
     model |> Changeset.change
