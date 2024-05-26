@@ -83,6 +83,13 @@ defmodule Params.Schema do
         end
       end
 
+      def map(params) do
+        case from(params, []) do
+          ch = %{valid?: true} -> {:ok, Params.to_map(ch)}
+          ch -> {:error, ch}
+        end
+      end
+
       def changeset(changeset, params) do
         Params.changeset(changeset, params)
       end
