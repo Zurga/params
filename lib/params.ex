@@ -198,8 +198,12 @@ defmodule Params do
 
   defp cast_relations(changeset, relations, opts) do
     Enum.reduce(relations, changeset, fn
-      {name, :assoc}, ch -> Changeset.cast_assoc(ch, name, opts)
-      {name, :embed}, ch -> Changeset.cast_embed(ch, name, opts)
+      {name, :assoc}, ch -> 
+        opts = opts ++ [sort_param: :"#{name}_sort", drop_param: :"#{name}_drop"]
+        Changeset.cast_assoc(ch, name, opts)
+      {name, :embed}, ch -> 
+        embed_opts = opts ++ [sort_param: :"#{name}_sort", drop_param: :"#{name}_drop"]
+        Changeset.cast_embed(ch, name, embed_opts)
     end)
   end
 

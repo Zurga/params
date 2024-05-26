@@ -56,6 +56,17 @@ defmodule ParamsTest do
     end
   end
 
+  defmodule TrainParams do
+    use Params.Schema
+    @required ~w(origin destination)
+    schema do
+      embeds_one(:origin, LocationParams)
+      embeds_one(:destination, LocationParams)
+      embeds_many(:stops, LocationParams, on_replace: :delete)
+    end
+  end
+    
+
   test "invalid changeset on missing params" do
     assert %{valid?: false} = BusParams.from(%{})
   end
@@ -88,6 +99,30 @@ defmodule ParamsTest do
     assert %{valid?: false} = BusParams.from(params)
   end
 
+  test "supports sort and drop options" do
+    params = %{
+      "origin" => %{
+        "latitude" => 12.2,
+        "longitude" => 13.3
+      },
+      "destination" => %{
+        "latitude" => 12.2,
+        "longitude" => 13.3
+      },
+    "stops" => %{
+        "0" => %{
+            "latitude" => 12.2,
+            "longitude" => 13.3,
+          # "_persistent_id" => "0",
+        }
+    },
+    }
+    assert %{valid?: true} = changeset = TrainParams.from(params)
+    dropped_params = Map.merge(params, %{
+    "stops_drop" => ["0"]})
+    assert %{valid?: true}  = changeset = TrainParams.from(dropped_params)
+    changeset
+  end
 
   test "to_map gets map of struct except for _id" do
     params = %{
